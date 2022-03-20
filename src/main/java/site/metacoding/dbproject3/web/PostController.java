@@ -1,7 +1,10 @@
 package site.metacoding.dbproject3.web;
 
+import java.util.Optional;
+
 import javax.servlet.http.HttpSession;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,14 +42,23 @@ public class PostController {
     public String list(Model model) {
         // 1. postRepository의 findAll() 호출
         // 2. model에 담기
-        model.addAttribute("posts", postRepository.findAll());
+        model.addAttribute("posts", postRepository.findAll(Sort.by(Sort.Direction.DESC, "id")));
         return "post/list";
     }
 
     // GET 글상세보기 페이지 /post/{id} (삭제버튼 만들어 두면됨, 수정버튼 만들어 두면됨) - 인증X
     @GetMapping("/post/{id}") // Get요청에 /post 제외 시키기
-    public String detail(@PathVariable Integer id) {
-        return "post/detail";
+    public String detail(@PathVariable Integer id, Model model) {
+        Optional<Post> postOp = postRepository.findById(id);
+
+        if (postOp.isPresent()) {
+            Post postEntity = postOp.get();
+            model.addAttribute("post", postEntity);
+            System.out.println("===========================================");
+            return "post/detail";
+        } else {
+            return "error/page1";
+        }
     }
 
     // GET 글수정 페이지 /post/{id}/updateForm - 인증O

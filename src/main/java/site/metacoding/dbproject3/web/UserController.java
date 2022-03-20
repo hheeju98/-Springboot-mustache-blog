@@ -41,6 +41,7 @@ public class UserController {
     // username=ssar&email=ssar@nate.com 패스워드 null
     // username=ssar&password=1234&email=ssar@nate.com (x-www-form)
     // 회원가입 - 로그인X
+
     @PostMapping("/join")
     public String join(User user) {
 
